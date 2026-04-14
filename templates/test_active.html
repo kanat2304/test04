@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выполнение теста</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body oncontextmenu="return false;">
+    <div class="timer-badge badge rounded-pill shadow text-white" id="timer-box">
+        ⏱️ <span id="time">--:--</span>
+    </div>
+
+    <div class="container py-5 mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="mb-4 fw-bold text-dark">{{ test.name }}</h2>
+                <div id="test-content">
+                    {% for q in test.questions %}
+                    {% set outer_index = loop.index %}
+                    <div class="question-card" data-q="{{ q.q }}">
+                        <h5 class="mb-3 fw-bold">{{ outer_index }}. {{ q.q }}</h5>
+                        {% for opt in q.options %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="q_{{ outer_index }}" value="{{ opt }}" id="opt_{{ outer_index }}_{{ loop.index }}">
+                            <label class="form-check-label py-1" for="opt_{{ outer_index }}_{{ loop.index }}">{{ opt }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                    <button onclick="finish('Успешно завершен')" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow mt-3">Отправить ответы</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const testId = "{{ test.test_id }}";
+        const studentName = "{{ student_name }}";
+        const group = "{{ group }}";
+        let time = parseInt("{{ test.time_limit }}") * 60;
+
+        const timer = setInterval(() => {
+            let m = Math.floor(time / 60), s = time % 60;
+            document.getElementById('time').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+            if (time-- <= 0) { clearInterval(timer); finish("Время вышло!"); }
+        }, 1000);
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) { clearInterval(timer); finish("Списывание: выход из вкладки"); }
+        });
+
+        function finish(status) {
+            let answers = {};
+            document.querySelectorAll('.question-card').forEach(card => {
+                let qText = card.getAttribute('data-q');
+                let selected = card.querySelector('input:checked');
+                answers[qText] = selected ? selected.value : "Нет ответа";
+            });
+
+            document.getElementById('test-content').innerHTML = "<div class='text-center py-5'><h3>Обработка данных...</h3></div>";
+
+            fetch('/submit_test', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({test_id: testId, student_name: studentName, group: group, status: status, answers: answers})
+            })
+            .then(r => r.json()).then(d => {
+                document.getElementById('test-content').innerHTML = `
+                    <div class='card p-5 text-center shadow-lg border-0'>
+                        <h2 class='text-success mb-3 fw-bold'>Тест завершен!</h2>
+                        <p class='h4 mb-4'>Ваш результат: <b style="color: #667eea;">${d.score} из ${d.total}</b></p>
+                        <p class='text-muted'>Статус: ${status}</p>
+                        <p class='mt-4 text-secondary small'>Вы можете закрыть эту страницу.</p>
+                    </div>`;
+                document.getElementById('timer-box').remove();
+            });
+        }
+    </script>
+</body>
+</html>

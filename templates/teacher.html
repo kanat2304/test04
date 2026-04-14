@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartGrade - Кабинет учителя</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="text-center mb-4">
+                    <h1 class="fw-bold text-primary" style="background: none !important; color: #667eea !important;">SmartGrade</h1>
+                    <p class="text-muted">Панель создания тестов</p>
+                </div>
+                <div class="card p-4">
+                    <h4 class="mb-4 text-center">Новый тест</h4>
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Название теста</label>
+                            <input type="text" name="test_name" class="form-control" placeholder="Например: Информатика, 2 курс" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Лимит времени (минуты)</label>
+                            <input type="number" name="time_limit" class="form-control" value="15" min="1" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Файл теста (.docx)</label>
+                            <input type="file" name="test_file" class="form-control" accept=".docx" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Создать и получить ссылку</button>
+                    </form>
+                </div>
+                <div class="mt-4 alert alert-info small shadow-sm" style="border-radius: 15px;">
+                    <strong>Памятка по Word файлу:</strong><br>
+                    1. Вопрос начинается с цифры (Например: <i>1. Какой цвет...</i>)<br>
+                    2. Ответы начинаются с буквы (Например: <i>А) Синий</i>)<br>
+                    3. Правильный ответ всегда должен быть под буквой <b>А</b>.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

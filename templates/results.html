@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты: {{ test.name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-dark">Результаты: <span style="color: #764ba2;">{{ test.name }}</span></h2>
+            <div>
+                <a href="/export/{{ test.test_id }}" class="btn btn-success me-2 fw-bold">⬇ Скачать Excel (CSV)</a>
+                <a href="/teacher" class="btn btn-primary fw-bold">Новый тест</a>
+            </div>
+        </div>
+        
+        <div class="card overflow-hidden">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="py-3 px-4">Студент</th>
+                        <th class="py-3">Группа</th>
+                        <th class="py-3">Статус</th>
+                        <th class="py-3">Баллы</th>
+                        <th class="py-3">Дата</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in results %}
+                    <tr class="{% if 'Списывание' in r.status %}table-danger{% endif %}">
+                        <td class="fw-bold px-4 py-3">{{ r.student_name }}</td>
+                        <td class="py-3">{{ r.group }}</td>
+                        <td class="py-3">
+                            <span class="badge {% if r.status == 'Успешно завершен' %}bg-success{% else %}bg-danger{% endif %} py-2 px-3" style="border-radius: 8px;">
+                                {{ r.status }}
+                            </span>
+                        </td>
+                        <td class="fw-bold fs-5 py-3" style="color: #667eea;">{{ r.score }} / {{ r.total }}</td>
+                        <td class="text-muted py-3">{{ r.timestamp }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="text-center py-5 text-muted">Студенты еще не проходили этот тест. Отправьте им ссылку!</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

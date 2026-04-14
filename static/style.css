@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f4f8;
+}
+
+.card {
+    border-radius: 20px !important;
+    border: none !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+}
+
+.btn-primary, .btn-success {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    color: white !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover, .btn-success:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.question-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    border-left: 6px solid #667eea !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+
+.question-card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+#timer-box {
+    font-size: 1.5rem;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%) !important;
+    border: none;
+}
